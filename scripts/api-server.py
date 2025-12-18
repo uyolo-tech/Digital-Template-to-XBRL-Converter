@@ -4,6 +4,7 @@
 import argparse
 import io
 import logging
+import os
 from pathlib import Path
 
 from flask import Flask, jsonify, request
@@ -15,6 +16,28 @@ from mireport.excelprocessor import VSME_DEFAULTS, ExcelProcessor
 
 app = Flask(__name__)
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Load taxonomy on module import (required for gunicorn)
+_taxonomy_loaded = False
+
+
+def _ensure_taxonomy_loaded():
+    global _taxonomy_loaded
+    if not _taxonomy_loaded:
+        logger.info("Loading taxonomy JSON...")
+        mireport.loadTaxonomyJSON()
+        _taxonomy_loaded = True
+        logger.info("Taxonomy loaded successfully")
+
+
+# Load on import for gunicorn
+_ensure_taxonomy_loaded()
+
+# Configure from environment variables
+app.config["TAXONOMY_PACKAGES"] = []
+app.config["WORK_OFFLINE"] = os.environ.get("WORK_OFFLINE", "false").lower() == "true"
+app.config["MAX_CONTENT_LENGTH"] = int(os.environ.get("MAX_FILE_SIZE", 16 * 1024 * 1024))
 
 
 def validate_excel(file_stream, filename: str, skip_xbrl: bool = False) -> dict:

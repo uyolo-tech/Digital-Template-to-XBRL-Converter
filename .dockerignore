@@ -1,0 +1,50 @@
+# Git
+.git
+.gitignore
+.gitattributes
+.github
+
+# Python
+__pycache__
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv
+venv
+ENV
+env
+.eggs
+*.egg-info
+*.egg
+dist
+build
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+
+# Testing
+tests
+.pytest_cache
+.coverage
+htmlcov
+
+# Documentation (keep README.md - required by pyproject.toml)
+CHANGELOG.md
+CONTRIBUTING.md
+digital-templates/*.md
+
+# Local files
+*.xlsx
+*.html
+*.zip
+output/
+flask_session/
+
+# Docker
+Dockerfile
+docker-compose*.yml
+.dockerignore
